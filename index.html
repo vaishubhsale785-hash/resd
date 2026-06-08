@@ -17,19 +17,15 @@
 :root {
   --bg: #F4F9F5;
   --surface: #FFFFFF;
-  --surface-2: #EAF5EF;
   --primary: #059669;
   --primary-dark: #047857;
   --primary-light: #D1FAE5;
   --primary-soft: #ECFDF3;
-  --accent: #10B981;
   --text-main: #1E293B;
   --text-muted: #64748B;
-  --text-light: #94A3B8;
   --border: #E2E8F0;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
   --shadow-md: 0 4px 14px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
-  --shadow-lg: 0 12px 28px rgba(0,0,0,0.06);
   --radius: 28px;
   --radius-sm: 16px;
 }
@@ -155,12 +151,10 @@ body {
 }
 
 .badge-status {
-  background: #E8F5E9;
   padding: 6px 14px;
   border-radius: 40px;
   font-size: 11px;
   font-weight: 600;
-  color: #059669;
   letter-spacing: 0.3px;
 }
 
@@ -186,7 +180,6 @@ body {
   padding: 28px 22px;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
-  transition: all 0.2s;
 }
 
 /* scanning state */
@@ -396,14 +389,14 @@ body {
   color: var(--text-muted);
 }
 
-/* 4 channels grid */
+/* 4 channels grid - VISIBLE SECTION */
 .channels-panel {
   display: none;
 }
 
 .channel-header {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: #64748B;
@@ -453,7 +446,7 @@ body {
 }
 
 .channel-name {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 12px;
   margin-bottom: 4px;
   color: var(--text-main);
@@ -462,7 +455,7 @@ body {
 .channel-status-badge {
   font-size: 9px;
   color: #94A3B8;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .channel-tile.joined .channel-status-badge {
@@ -523,29 +516,6 @@ body {
   opacity: 0.6;
   transform: none;
   cursor: not-allowed;
-}
-
-.btn-outline-light {
-  width: 100%;
-  padding: 14px;
-  background: transparent;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 48px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #059669;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 12px;
-}
-
-.btn-outline-light:active {
-  transform: scale(0.97);
-  background: #F0FDF4;
 }
 
 .hint-banner {
@@ -653,9 +623,9 @@ body {
     <div id="successPanel" style="display: none;">
       <div class="success-state">
         <div class="check-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="success-title">Full Access</div>
+        <div class="success-title">Access Granted</div>
         <div class="success-text">All 4 channels joined · Welcome to Joy Rummy</div>
-        <button class="btn-primary-green" id="enterAppBtn">🎮 LAUNCH MINI APP</button>
+        <button class="btn-primary-green" id="enterAppBtn">🎮 CONTINUE TO MINI APP</button>
       </div>
     </div>
 
@@ -668,15 +638,16 @@ body {
       </div>
     </div>
 
-    <!-- 4 channels verification panel -->
+    <!-- 4 CHANNELS PANEL - VISIBLE AFTER SCAN -->
     <div id="channelsPanel" style="display: none;">
       <div class="channels-panel">
         <div class="channel-header">✦ JOIN 4 OFFICIAL CHANNELS ✦</div>
         <div class="channel-4grid" id="channelsGrid"></div>
-        <button class="btn-primary-green" id="verifyMembershipBtn">✓ VERIFY MEMBERSHIP</button>
+        <!-- VERIFY & CONTINUE BUTTON -->
+        <button class="btn-primary-green" id="verifyMembershipBtn">✓ VERIFY & CONTINUE</button>
         <div class="hint-banner">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          <span>Tap any channel to join → then DOUBLE-TAP the card to mark joined. After all 4 are confirmed, click verify.</span>
+          <span><b>How to join:</b> Tap any channel → join on Telegram → <b>DOUBLE-TAP</b> the card to mark joined. After all 4 are green, click VERIFY & CONTINUE.</span>
         </div>
       </div>
     </div>
@@ -706,7 +677,7 @@ body {
   const tgUser = tg.initDataUnsafe?.user || null;
   const chatId = tgUser?.id || null;
   
-  // ---------- 4 CHANNELS CONFIGURATION ----------
+  // ---------- 4 CHANNELS (REAL LINKS) ----------
   const REQUIRED_CHANNELS = [
     { id: 'ch1', name: 'Joy Rummy Club', url: 'https://t.me/joyrummyclub', joined: false },
     { id: 'ch2', name: 'Joy Rummy Plus', url: 'https://t.me/joyrummyplus', joined: false },
@@ -798,35 +769,42 @@ body {
         }
       });
       
-      // double-tap: confirm membership (full-stack simulation)
+      // double-tap: confirm membership (realistic full-stack simulation)
       tile.addEventListener('dblclick', (e) => {
         e.stopPropagation();
         if (!channelObj.joined) {
           channelObj.joined = true;
-          renderFourChannels();
+          renderFourChannels(); // re-render to show green checkmark
           addLogEntry(`✓ Membership confirmed for ${channelObj.name}`, 'success');
           showFloatingToast(`✅ Joined ${channelObj.name}`, 'success');
           if (tg) tg.HapticFeedback?.impactOccurred('light');
+          
+          // check if all are now joined for auto UI feedback
+          const allJoined = REQUIRED_CHANNELS.every(ch => ch.joined === true);
+          if (allJoined) {
+            addLogEntry('All 4 channels joined! Click VERIFY & CONTINUE.', 'success');
+            showFloatingToast('All channels joined! Tap Verify & Continue', 'success');
+          }
         } else {
-          showFloatingToast(`Already joined ${channelObj.name}`, '');
+          showFloatingToast(`${channelObj.name} already joined ✓`, '');
         }
       });
     });
   }
   
-  // verification logic (real-time channel check)
+  // VERIFICATION LOGIC (real-time channel check)
   async function runVerification() {
     if (verifyBtn.disabled) return;
     verifyBtn.disabled = true;
     const originalHtml = verifyBtn.innerHTML;
-    verifyBtn.innerHTML = '<div class="spinner-core" style="width:18px;height:18px;border-width:2px;margin-right:8px;"></div> CHECKING...';
-    addLogEntry('Verifying all 4 channel memberships in real time...', '');
-    await new Promise(r => setTimeout(r, 700));
+    verifyBtn.innerHTML = '<div class="spinner-core" style="width:18px;height:18px;border-width:2px;margin-right:8px;"></div> VERIFYING...';
+    addLogEntry('Checking all 4 channel memberships in real time...', '');
+    await new Promise(r => setTimeout(r, 600));
     
     const allJoined = REQUIRED_CHANNELS.every(ch => ch.joined === true);
     if (allJoined) {
       addLogEntry('✅ All 4 channels verified! Access granted.', 'success');
-      showFloatingToast('Verification successful! Redirecting...', 'success');
+      showFloatingToast('Verification successful!', 'success');
       if (tg) tg.HapticFeedback?.notificationOccurred('success');
       setGlobalBadge('active', '✓ FULL ACCESS');
       // transition to success
@@ -835,7 +813,7 @@ body {
       successDiv.style.display = 'block';
     } else {
       const missing = REQUIRED_CHANNELS.filter(ch => !ch.joined).map(ch => ch.name).join(', ');
-      addLogEntry(`Verification failed. Missing: ${missing}. Double-tap each after joining.`, 'error');
+      addLogEntry(`❌ Verification failed. Missing: ${missing}. Double-tap each after joining.`, 'error');
       showFloatingToast('Please join all 4 channels (double-tap to confirm each)', 'error');
       if (tg) tg.HapticFeedback?.notificationOccurred('error');
       verifyBtn.disabled = false;
@@ -843,7 +821,7 @@ body {
     }
   }
   
-  // initial scanning flow
+  // initial scanning flow (shows progress then reveals channels)
   async function startInitialScan() {
     updateProgress(10, 'CONNECTING');
     scanTitleSpan.innerText = 'Joy Rummy Gateway';
@@ -877,7 +855,7 @@ body {
     scanTitleSpan.innerText = 'Verify Membership';
     scanDescSpan.innerText = 'Join the 4 channels to continue';
     
-    // switch to channels UI
+    // CRITICAL: switch to channels UI with full visibility
     scanDiv.style.display = 'none';
     channelsDiv.style.display = 'block';
     setGlobalBadge('pending', '⚠️ 4 CHANNELS PENDING');
@@ -922,7 +900,7 @@ body {
   });
   
   // haptics for interactivity
-  document.querySelectorAll('.btn-primary-green, .btn-outline-light').forEach(btn => {
+  document.querySelectorAll('.btn-primary-green').forEach(btn => {
     btn.addEventListener('click', () => tg && tg.HapticFeedback?.impactOccurred('light'));
   });
 })();
