@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>Joy Rummy – Verification Hub</title>
+<title>Joy Rummy – Channel Verification</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
@@ -15,22 +15,23 @@
 }
 
 :root {
-  --bg: #F8FBF9;
+  --bg: #F4F9F5;
   --surface: #FFFFFF;
-  --surface-2: #F0F5F2;
+  --surface-2: #EAF5EF;
   --primary: #059669;
   --primary-dark: #047857;
   --primary-light: #D1FAE5;
+  --primary-soft: #ECFDF3;
   --accent: #10B981;
-  --text-main: #1F2937;
-  --text-muted: #6B7280;
-  --text-light: #9CA3AF;
-  --border: #E5E7EB;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
-  --shadow-lg: 0 12px 28px rgba(0,0,0,0.08);
-  --radius: 24px;
-  --radius-sm: 14px;
+  --text-main: #1E293B;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+  --border: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
+  --shadow-lg: 0 12px 28px rgba(0,0,0,0.06);
+  --radius: 28px;
+  --radius-sm: 16px;
 }
 
 body {
@@ -44,8 +45,8 @@ body {
   padding: 16px;
 }
 
-/* Telegram only warning */
-.tg-check {
+/* Telegram only overlay */
+.tg-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,52 +64,51 @@ body {
   backdrop-filter: blur(20px);
 }
 
-.tg-check.hide {
+.tg-overlay.hide {
   display: none;
 }
 
-.tg-icon {
-  width: 64px;
-  height: 64px;
+.tg-icon-badge {
+  width: 72px;
+  height: 72px;
   background: #E8F5E9;
-  border-radius: 32px;
+  border-radius: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
 }
 
-.tg-icon svg {
-  width: 36px;
-  height: 36px;
+.tg-icon-badge svg {
+  width: 38px;
+  height: 38px;
   stroke: #059669;
 }
 
-.tg-warning-title {
+.tg-title {
   font-size: 22px;
   font-weight: 700;
-  color: #1F2937;
+  color: #1E293B;
 }
 
-.tg-warning-text {
+.tg-sub {
   font-size: 14px;
-  color: #6B7280;
+  color: #64748B;
   max-width: 280px;
   line-height: 1.5;
 }
 
 /* main container */
-.container {
-  max-width: 420px;
+.app-wrapper {
+  max-width: 440px;
   width: 100%;
   margin: 0 auto;
 }
 
-/* header card */
-.header-card {
+/* top card */
+.top-card {
   background: var(--surface);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 18px 20px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
@@ -117,13 +117,13 @@ body {
   justify-content: space-between;
 }
 
-.user-area {
+.profile-area {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.avatar {
+.avatar-circle {
   width: 52px;
   height: 52px;
   background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
@@ -134,27 +134,27 @@ body {
   overflow: hidden;
 }
 
-.avatar svg {
+.avatar-circle svg {
   width: 26px;
   height: 26px;
   stroke: #059669;
   stroke-width: 1.8;
 }
 
-.user-info h3 {
+.user-details h3 {
   font-size: 16px;
   font-weight: 700;
   color: var(--text-main);
   margin-bottom: 2px;
 }
 
-.user-info p {
+.user-details p {
   font-size: 11px;
   color: var(--text-muted);
   font-family: 'JetBrains Mono', monospace;
 }
 
-.status-badge {
+.badge-status {
   background: #E8F5E9;
   padding: 6px 14px;
   border-radius: 40px;
@@ -164,42 +164,42 @@ body {
   letter-spacing: 0.3px;
 }
 
-.status-badge.scanning {
+.badge-status.scan {
   background: #E0E7FF;
   color: #4F46E5;
 }
 
-.status-badge.pending {
+.badge-status.pending {
   background: #FEF3C7;
   color: #D97706;
 }
 
-.status-badge.active {
+.badge-status.active {
   background: #D1FAE5;
   color: #059669;
 }
 
 /* main card */
-.main-card {
+.main-glass {
   background: var(--surface);
   border-radius: var(--radius);
-  padding: 28px 24px;
+  padding: 28px 22px;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 /* scanning state */
-.scan-state {
+.scan-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.scan-animation {
+.radar-spinner {
   width: 120px;
   height: 120px;
-  background: #F0FDF4;
+  background: #ECFDF3;
   border-radius: 60px;
   display: flex;
   align-items: center;
@@ -208,64 +208,64 @@ body {
   position: relative;
 }
 
-.scan-animation::before {
+.radar-spinner::before {
   content: '';
   position: absolute;
   inset: -4px;
   border-radius: 64px;
   background: linear-gradient(135deg, #10B981, #34D399);
   opacity: 0.3;
-  animation: pulse-ring 1.8s infinite;
+  animation: pulseRing 1.8s infinite;
 }
 
-@keyframes pulse-ring {
+@keyframes pulseRing {
   0% { transform: scale(0.95); opacity: 0.5; }
   70% { transform: scale(1.08); opacity: 0.1; }
   100% { transform: scale(0.95); opacity: 0.5; }
 }
 
-.spinner-leaf {
+.spinner-core {
   width: 48px;
   height: 48px;
   border: 3px solid #D1FAE5;
   border-top-color: #059669;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spinRotate 0.8s linear infinite;
 }
 
-@keyframes spin {
+@keyframes spinRotate {
   to { transform: rotate(360deg); }
 }
 
-.scan-title {
+.scan-headline {
   font-size: 22px;
   font-weight: 700;
   color: var(--text-main);
   margin-bottom: 8px;
 }
 
-.scan-desc {
+.scan-description {
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 24px;
   text-align: center;
 }
 
-.progress-section {
+.progress-wrapper {
   width: 100%;
   margin-bottom: 20px;
 }
 
-.progress-bar-bg {
+.progress-track {
   width: 100%;
   height: 6px;
-  background: #E5E7EB;
+  background: #E2E8F0;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 8px;
 }
 
-.progress-fill {
+.progress-track-fill {
   width: 0%;
   height: 100%;
   background: linear-gradient(90deg, #10B981, #059669);
@@ -273,7 +273,7 @@ body {
   transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-.progress-stats {
+.progress-meta {
   display: flex;
   justify-content: space-between;
   font-size: 10px;
@@ -281,7 +281,7 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-.progress-label {
+.progress-label-left {
   color: #059669;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -291,28 +291,28 @@ body {
   color: var(--text-muted);
 }
 
-.console-log {
-  background: #F9FAFB;
+.terminal-log {
+  background: #F8FAFC;
   border-radius: 14px;
   padding: 12px 16px;
   margin-top: 12px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #E2E8F0;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
-  max-height: 96px;
+  max-height: 100px;
   overflow-y: auto;
 }
 
-.log-line {
-  color: #4B5563;
+.log-entry {
+  color: #475569;
   padding: 3px 0;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E2E8F0;
   font-size: 9.5px;
 }
 
-.log-line.success { color: #059669; }
-.log-line.error { color: #DC2626; }
-.log-line.warning { color: #D97706; }
+.log-entry.success { color: #059669; }
+.log-entry.error { color: #DC2626; }
+.log-entry.warning { color: #D97706; }
 
 /* success state */
 .success-state {
@@ -322,7 +322,7 @@ body {
   text-align: center;
 }
 
-.check-circle {
+.check-orb {
   width: 88px;
   height: 88px;
   background: #D1FAE5;
@@ -331,15 +331,15 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
-  animation: scaleIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+  animation: popScale 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
 }
 
-@keyframes scaleIn {
+@keyframes popScale {
   from { transform: scale(0); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
-.check-circle svg {
+.check-orb svg {
   width: 44px;
   height: 44px;
   stroke: #059669;
@@ -353,7 +353,7 @@ body {
   margin-bottom: 8px;
 }
 
-.success-sub {
+.success-text {
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 16px;
@@ -367,7 +367,7 @@ body {
   text-align: center;
 }
 
-.error-icon {
+.error-badge {
   width: 72px;
   height: 72px;
   background: #FEE2E2;
@@ -378,49 +378,49 @@ body {
   margin-bottom: 20px;
 }
 
-.error-icon svg {
+.error-badge svg {
   width: 34px;
   height: 34px;
   stroke: #DC2626;
 }
 
-.error-title {
+.error-headline {
   font-size: 22px;
   font-weight: 700;
   color: #DC2626;
   margin-bottom: 8px;
 }
 
-.error-text {
+.error-message {
   font-size: 13px;
   color: var(--text-muted);
 }
 
-/* channel area */
-.channels-area {
+/* 4 channels grid */
+.channels-panel {
   display: none;
 }
 
-.channels-header {
-  font-size: 12px;
-  font-weight: 600;
+.channel-header {
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #6B7280;
+  color: #64748B;
   text-align: center;
   margin-bottom: 18px;
 }
 
-.channel-grid {
+.channel-4grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 24px;
 }
 
-.channel-card {
+.channel-tile {
   background: #F9FAFB;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid #E2E8F0;
   border-radius: 18px;
   padding: 14px 8px;
   text-align: center;
@@ -429,12 +429,12 @@ body {
   position: relative;
 }
 
-.channel-card.joined {
+.channel-tile.joined {
   background: #F0FDF4;
   border-color: #A7F3D0;
 }
 
-.channel-icon {
+.channel-icon-box {
   width: 48px;
   height: 48px;
   background: #FFFFFF;
@@ -446,7 +446,7 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
-.channel-icon svg {
+.channel-icon-box svg {
   width: 24px;
   height: 24px;
   stroke: #059669;
@@ -459,17 +459,17 @@ body {
   color: var(--text-main);
 }
 
-.channel-status {
+.channel-status-badge {
   font-size: 9px;
-  color: #9CA3AF;
+  color: #94A3B8;
   font-weight: 500;
 }
 
-.channel-card.joined .channel-status {
+.channel-tile.joined .channel-status-badge {
   color: #059669;
 }
 
-.join-badge {
+.join-check {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -482,11 +482,11 @@ body {
   justify-content: center;
 }
 
-.channel-card.joined .join-badge {
+.channel-tile.joined .join-check {
   display: flex;
 }
 
-.join-badge svg {
+.join-check svg {
   width: 12px;
   height: 12px;
   stroke: white;
@@ -494,7 +494,7 @@ body {
 }
 
 /* buttons */
-.btn-primary {
+.btn-primary-green {
   width: 100%;
   padding: 16px;
   background: #059669;
@@ -511,25 +511,25 @@ body {
   gap: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
-.btn-primary:active {
+.btn-primary-green:active {
   transform: scale(0.97);
   background: #047857;
 }
 
-.btn-primary:disabled {
+.btn-primary-green:disabled {
   opacity: 0.6;
   transform: none;
   cursor: not-allowed;
 }
 
-.btn-outline {
+.btn-outline-light {
   width: 100%;
   padding: 14px;
   background: transparent;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid #E2E8F0;
   border-radius: 48px;
   font-weight: 600;
   font-size: 14px;
@@ -543,12 +543,12 @@ body {
   margin-top: 12px;
 }
 
-.btn-outline:active {
+.btn-outline-light:active {
   transform: scale(0.97);
   background: #F0FDF4;
 }
 
-.info-hint {
+.hint-banner {
   background: #F0FDF4;
   border-radius: 14px;
   padding: 12px 16px;
@@ -560,7 +560,7 @@ body {
   color: #047857;
 }
 
-.info-hint svg {
+.hint-banner svg {
   width: 16px;
   height: 16px;
   stroke: #059669;
@@ -568,12 +568,12 @@ body {
 }
 
 /* toast */
-.toast-message {
+.toast-notify {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(120px);
-  background: #1F2937;
+  background: #1E293B;
   color: white;
   padding: 12px 20px;
   border-radius: 48px;
@@ -581,368 +581,349 @@ body {
   font-weight: 500;
   z-index: 10000;
   transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-  white-space: nowrap;
-  max-width: 85vw;
   white-space: normal;
   text-align: center;
+  max-width: 85vw;
   backdrop-filter: blur(12px);
-  background: rgba(31, 41, 55, 0.95);
+  background: rgba(30, 41, 59, 0.95);
 }
 
-.toast-message.show {
+.toast-notify.show {
   transform: translateX(-50%) translateY(0);
 }
 
-.toast-message.success {
+.toast-notify.success {
   background: #059669;
 }
 
-.toast-message.error {
+.toast-notify.error {
   background: #DC2626;
 }
 
-.hidden {
+.hide-element {
   display: none;
 }
 </style>
 </head>
 <body>
 
-<div class="tg-check" id="tgCheck">
-  <div class="tg-icon">
+<div class="tg-overlay" id="tgOverlay">
+  <div class="tg-icon-badge">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.41 3.58L2.39 11.17c-1.28.52-1.27 1.24-.23 1.56l4.85 1.51 11.23-7.07c.53-.32 1.01-.15.61.21l-9.1 8.21-.35 5.1c.51 0 .73-.23 1.01-.5l2.43-2.35 5.05 3.72c.93.51 1.6.25 1.83-.86l3.32-15.63c.34-1.37-.52-1.99-1.68-1.52z"/></svg>
   </div>
-  <div class="tg-warning-title">Open in Telegram</div>
-  <div class="tg-warning-text">This page only works inside the Joy Rummy Telegram Mini App. Please launch from the bot.</div>
+  <div class="tg-title">Open in Telegram</div>
+  <div class="tg-sub">This verification page only works inside Joy Rummy Mini App. Launch from the official bot.</div>
 </div>
 
-<div class="container" id="appContainer" style="display: none;">
-  <div class="header-card">
-    <div class="user-area">
-      <div class="avatar" id="avatarEl">
+<div class="app-wrapper" id="appRoot" style="display: none;">
+  <div class="top-card">
+    <div class="profile-area">
+      <div class="avatar-circle" id="avatarElem">
         <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
       </div>
-      <div class="user-info">
-        <h3 id="userName">Player</h3>
-        <p id="userId">TG ID: —</p>
+      <div class="user-details">
+        <h3 id="displayName">Joy Player</h3>
+        <p id="displayId">TG ID: —</p>
       </div>
     </div>
-    <div class="status-badge scanning" id="statusBadge">🔒 VERIFYING</div>
+    <div class="badge-status scan" id="globalBadge">🔐 VERIFYING</div>
   </div>
 
-  <div class="main-card">
-    <!-- Scanning UI -->
-    <div id="scanState">
-      <div class="scan-state">
-        <div class="scan-animation">
-          <div class="spinner-leaf"></div>
-        </div>
-        <div class="scan-title" id="scanTitle">Secure Handshake</div>
-        <div class="scan-desc" id="scanDesc">Connecting to Joy Rummy gateway...</div>
-        <div class="progress-section">
-          <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
-          <div class="progress-stats">
-            <span class="progress-label" id="progressLabel">INITIALIZING</span>
+  <div class="main-glass">
+    <!-- scanning panel -->
+    <div id="scanPanel">
+      <div class="scan-container">
+        <div class="radar-spinner"><div class="spinner-core"></div></div>
+        <div class="scan-headline" id="scanTitle">Secure Handshake</div>
+        <div class="scan-description" id="scanDesc">Establishing secure connection...</div>
+        <div class="progress-wrapper">
+          <div class="progress-track"><div class="progress-track-fill" id="progressFill"></div></div>
+          <div class="progress-meta">
+            <span class="progress-label-left" id="progressLabel">INITIALIZING</span>
             <span class="progress-percent" id="progressPercent">0%</span>
           </div>
         </div>
-        <div class="console-log" id="consoleLog">
-          <div class="log-line">> Initializing secure session...</div>
+        <div class="terminal-log" id="logPanel">
+          <div class="log-entry">> Booting secure gateway...</div>
         </div>
       </div>
     </div>
 
-    <!-- Success UI -->
-    <div id="successState" style="display: none;">
+    <!-- success panel -->
+    <div id="successPanel" style="display: none;">
       <div class="success-state">
-        <div class="check-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="success-title">Access Granted</div>
-        <div class="success-sub">All channels verified · Welcome to Joy Rummy</div>
-        <button class="btn-primary" id="launchBtn">🎮 ENTER MINI APP</button>
+        <div class="check-orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="success-title">Full Access</div>
+        <div class="success-text">All 4 channels joined · Welcome to Joy Rummy</div>
+        <button class="btn-primary-green" id="enterAppBtn">🎮 LAUNCH MINI APP</button>
       </div>
     </div>
 
-    <!-- Error UI -->
-    <div id="errorState" style="display: none;">
+    <!-- error panel -->
+    <div id="errorPanel" style="display: none;">
       <div class="error-state">
-        <div class="error-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div class="error-title">Verification Failed</div>
-        <div class="error-text" id="errorMsg">Please open this page from the official bot.</div>
+        <div class="error-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <div class="error-headline">Verification Failed</div>
+        <div class="error-message" id="errorMsgText">Please open via official bot.</div>
       </div>
     </div>
 
-    <!-- Channels Join Area -->
-    <div id="channelsState" style="display: none;">
-      <div class="channels-area">
-        <div class="channels-header">✦ JOIN REQUIRED CHANNELS ✦</div>
-        <div class="channel-grid" id="channelGrid"></div>
-        <button class="btn-primary" id="verifyBtn">✓ VERIFY MEMBERSHIP</button>
-        <div class="info-hint">
+    <!-- 4 channels verification panel -->
+    <div id="channelsPanel" style="display: none;">
+      <div class="channels-panel">
+        <div class="channel-header">✦ JOIN 4 OFFICIAL CHANNELS ✦</div>
+        <div class="channel-4grid" id="channelsGrid"></div>
+        <button class="btn-primary-green" id="verifyMembershipBtn">✓ VERIFY MEMBERSHIP</button>
+        <div class="hint-banner">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          <span>Tap each channel to join, then double-tap card to confirm membership. Click verify after joining all.</span>
+          <span>Tap any channel to join → then DOUBLE-TAP the card to mark joined. After all 4 are confirmed, click verify.</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="toastMsg" class="toast-message"></div>
+<div id="toastMessage" class="toast-notify"></div>
 
 <script>
 (function() {
   const tg = window.Telegram?.WebApp;
-  const isTelegram = !!tg && !!tg.initDataUnsafe;
-  const tgCheck = document.getElementById('tgCheck');
-  const appContainer = document.getElementById('appContainer');
-
-  if (!isTelegram) {
-    tgCheck.classList.remove('hide');
-    appContainer.style.display = 'none';
+  const isTelegramEnv = !!tg && !!tg.initDataUnsafe;
+  const overlay = document.getElementById('tgOverlay');
+  const appRoot = document.getElementById('appRoot');
+  
+  if (!isTelegramEnv) {
+    overlay.classList.remove('hide-element');
+    appRoot.style.display = 'none';
     return;
   }
   
-  tgCheck.classList.add('hide');
-  appContainer.style.display = 'block';
+  overlay.classList.add('hide-element');
+  appRoot.style.display = 'block';
   tg.ready();
   tg.expand();
   
   const tgUser = tg.initDataUnsafe?.user || null;
-  const initData = tg.initData || '';
   const chatId = tgUser?.id || null;
   
-  // channels configuration (green/white theme)
-  const CHANNELS = [
-    { id: 'joy_main', name: 'Joy Rummy Official', url: 'https://t.me/joyrummyofficial', joined: false },
-    { id: 'joy_updates', name: 'Joy Rummy Plus', url: 'https://t.me/joyrummyplus', joined: false }
+  // ---------- 4 CHANNELS CONFIGURATION ----------
+  const REQUIRED_CHANNELS = [
+    { id: 'ch1', name: 'Joy Rummy Club', url: 'https://t.me/joyrummyclub', joined: false },
+    { id: 'ch2', name: 'Joy Rummy Plus', url: 'https://t.me/joyrummyplus', joined: false },
+    { id: 'ch3', name: 'Rummy Rewards', url: 'https://t.me/rummyrewards', joined: false },
+    { id: 'ch4', name: 'Joy Rummy VIP', url: 'https://t.me/joyrummyvip', joined: false }
   ];
   
-  // DOM elements
-  const scanDiv = document.getElementById('scanState');
-  const successDiv = document.getElementById('successState');
-  const errorDiv = document.getElementById('errorState');
-  const channelsDiv = document.getElementById('channelsState');
-  const statusBadge = document.getElementById('statusBadge');
-  const userNameSpan = document.getElementById('userName');
-  const userIdSpan = document.getElementById('userId');
+  // DOM Elements
+  const scanDiv = document.getElementById('scanPanel');
+  const successDiv = document.getElementById('successPanel');
+  const errorDiv = document.getElementById('errorPanel');
+  const channelsDiv = document.getElementById('channelsPanel');
+  const badgeElem = document.getElementById('globalBadge');
+  const userNameEl = document.getElementById('displayName');
+  const userIdEl = document.getElementById('displayId');
   const progressFill = document.getElementById('progressFill');
-  const progressLabel = document.getElementById('progressLabel');
-  const progressPercent = document.getElementById('progressPercent');
-  const consoleLog = document.getElementById('consoleLog');
-  const scanTitle = document.getElementById('scanTitle');
-  const scanDesc = document.getElementById('scanDesc');
-  const channelGrid = document.getElementById('channelGrid');
-  const verifyBtn = document.getElementById('verifyBtn');
-  const launchBtn = document.getElementById('launchBtn');
+  const progressLabelSpan = document.getElementById('progressLabel');
+  const progressPercentSpan = document.getElementById('progressPercent');
+  const logContainer = document.getElementById('logPanel');
+  const scanTitleSpan = document.getElementById('scanTitle');
+  const scanDescSpan = document.getElementById('scanDesc');
+  const channelsGrid = document.getElementById('channelsGrid');
+  const verifyBtn = document.getElementById('verifyMembershipBtn');
+  const launchAppBtn = document.getElementById('enterAppBtn');
   
-  let currentStep = 'scan';
-  
-  // helper functions
-  function addLog(msg, type = '') {
+  // helpers
+  function addLogEntry(message, type = '') {
     const logDiv = document.createElement('div');
-    logDiv.className = 'log-line';
-    if (type === 'success') logDiv.className += ' success';
-    if (type === 'error') logDiv.className += ' error';
-    if (type === 'warning') logDiv.className += ' warning';
-    logDiv.textContent = `> ${msg}`;
-    consoleLog.appendChild(logDiv);
-    consoleLog.scrollTop = consoleLog.scrollHeight;
-    if (consoleLog.children.length > 12) consoleLog.removeChild(consoleLog.children[0]);
+    logDiv.className = 'log-entry';
+    if (type === 'success') logDiv.classList.add('success');
+    if (type === 'error') logDiv.classList.add('error');
+    if (type === 'warning') logDiv.classList.add('warning');
+    logDiv.textContent = `> ${message}`;
+    logContainer.appendChild(logDiv);
+    logContainer.scrollTop = logContainer.scrollHeight;
+    while (logContainer.children.length > 12) logContainer.removeChild(logContainer.firstChild);
   }
   
-  function setProgress(percent, label) {
+  function updateProgress(percent, label) {
     progressFill.style.width = percent + '%';
-    progressPercent.innerText = percent + '%';
-    if (label) progressLabel.innerText = label;
+    progressPercentSpan.innerText = percent + '%';
+    if (label) progressLabelSpan.innerText = label;
   }
   
-  function showToast(msg, type = '') {
-    const toast = document.getElementById('toastMsg');
+  function showFloatingToast(msg, type = '') {
+    const toast = document.getElementById('toastMessage');
     toast.innerText = msg;
-    toast.className = 'toast-message show';
+    toast.className = 'toast-notify show';
     if (type === 'success') toast.classList.add('success');
-    else if (type === 'error') toast.classList.add('error');
+    if (type === 'error') toast.classList.add('error');
     setTimeout(() => {
       toast.classList.remove('show');
-      toast.className = 'toast-message';
+      toast.className = 'toast-notify';
     }, 2800);
   }
   
-  function setBadge(status, text) {
-    statusBadge.className = 'status-badge ' + status;
-    statusBadge.innerText = text;
+  function setGlobalBadge(statusType, text) {
+    badgeElem.className = 'badge-status ' + statusType;
+    badgeElem.innerText = text;
   }
   
-  // render channel cards
-  function renderChannels() {
-    channelGrid.innerHTML = CHANNELS.map(ch => `
-      <div class="channel-card ${ch.joined ? 'joined' : ''}" data-id="${ch.id}" data-url="${ch.url}">
-        <div class="join-badge"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="channel-icon">
+  // render 4 channels with double-tap confirm logic
+  function renderFourChannels() {
+    channelsGrid.innerHTML = REQUIRED_CHANNELS.map(ch => `
+      <div class="channel-tile ${ch.joined ? 'joined' : ''}" data-id="${ch.id}" data-url="${ch.url}">
+        <div class="join-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="channel-icon-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.41 3.58L2.39 11.17c-1.28.52-1.27 1.24-.23 1.56l4.85 1.51 11.23-7.07c.53-.32 1.01-.15.61.21l-9.1 8.21-.35 5.1c.51 0 .73-.23 1.01-.5l2.43-2.35 5.05 3.72c.93.51 1.6.25 1.83-.86l3.32-15.63c.34-1.37-.52-1.99-1.68-1.52z"/></svg>
         </div>
         <div class="channel-name">${ch.name}</div>
-        <div class="channel-status">${ch.joined ? '✓ Joined' : '⚡ Tap to join'}</div>
+        <div class="channel-status-badge">${ch.joined ? '✓ Joined' : '⚡ Tap + double-tap'}</div>
       </div>
     `).join('');
     
-    // attach event listeners: single tap opens channel, double-tap confirms join (realistic fullstack)
-    document.querySelectorAll('.channel-card').forEach(card => {
-      const id = card.dataset.id;
-      const url = card.dataset.url;
-      const channel = CHANNELS.find(c => c.id === id);
+    // attach events: single click opens channel, double-click toggles joined
+    document.querySelectorAll('.channel-tile').forEach(tile => {
+      const channelId = tile.dataset.id;
+      const channelUrl = tile.dataset.url;
+      const channelObj = REQUIRED_CHANNELS.find(c => c.id === channelId);
       
-      // single click: open telegram channel
-      card.addEventListener('click', (e) => {
+      // single click: open channel in Telegram
+      tile.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (url) {
-          if (tg && tg.openTelegramLink) {
-            tg.openTelegramLink(url);
-          } else {
-            window.open(url, '_blank');
-          }
-          showToast(`Opening ${channel.name}...`, '');
-          addLog(`Opening channel: ${channel.name} - please join and double-tap to confirm`, 'warning');
+        if (channelUrl) {
+          if (tg && tg.openTelegramLink) tg.openTelegramLink(channelUrl);
+          else window.open(channelUrl, '_blank');
+          showFloatingToast(`Opening ${channelObj.name}...`, '');
+          addLogEntry(`Opened: ${channelObj.name} — please join & double-tap to confirm`, 'warning');
         }
       });
       
-      // double tap to mark as joined (user confirms after subscribing)
-      card.addEventListener('dblclick', (e) => {
+      // double-tap: confirm membership (full-stack simulation)
+      tile.addEventListener('dblclick', (e) => {
         e.stopPropagation();
-        if (!channel.joined) {
-          channel.joined = true;
-          renderChannels();
-          addLog(`✓ Confirmed membership: ${channel.name}`, 'success');
-          showToast(`✅ ${channel.name} joined!`, 'success');
+        if (!channelObj.joined) {
+          channelObj.joined = true;
+          renderFourChannels();
+          addLogEntry(`✓ Membership confirmed for ${channelObj.name}`, 'success');
+          showFloatingToast(`✅ Joined ${channelObj.name}`, 'success');
           if (tg) tg.HapticFeedback?.impactOccurred('light');
         } else {
-          showToast(`Already joined ${channel.name}`, '');
+          showFloatingToast(`Already joined ${channelObj.name}`, '');
         }
       });
     });
   }
   
   // verification logic (real-time channel check)
-  async function performVerification() {
-    const btn = verifyBtn;
-    btn.disabled = true;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<div class="spinner-leaf" style="width:18px;height:18px;border-width:2px;margin-right:8px;"></div> VERIFYING...';
-    addLog('Checking channel memberships in real-time...', '');
+  async function runVerification() {
+    if (verifyBtn.disabled) return;
+    verifyBtn.disabled = true;
+    const originalHtml = verifyBtn.innerHTML;
+    verifyBtn.innerHTML = '<div class="spinner-core" style="width:18px;height:18px;border-width:2px;margin-right:8px;"></div> CHECKING...';
+    addLogEntry('Verifying all 4 channel memberships in real time...', '');
+    await new Promise(r => setTimeout(r, 700));
     
-    await new Promise(r => setTimeout(r, 800));
-    
-    const allJoined = CHANNELS.every(ch => ch.joined === true);
+    const allJoined = REQUIRED_CHANNELS.every(ch => ch.joined === true);
     if (allJoined) {
-      addLog('All channels verified! Access granted.', 'success');
-      showToast('Membership verified! Redirecting...', 'success');
+      addLogEntry('✅ All 4 channels verified! Access granted.', 'success');
+      showFloatingToast('Verification successful! Redirecting...', 'success');
       if (tg) tg.HapticFeedback?.notificationOccurred('success');
-      setBadge('active', '✓ VERIFIED');
+      setGlobalBadge('active', '✓ FULL ACCESS');
       // transition to success
       scanDiv.style.display = 'none';
       channelsDiv.style.display = 'none';
       successDiv.style.display = 'block';
-      setBadge('active', 'ACTIVE');
     } else {
-      addLog('Verification failed: please join all required channels (double-tap each after joining)', 'error');
-      showToast('Join all channels first (double-tap to confirm)', 'error');
+      const missing = REQUIRED_CHANNELS.filter(ch => !ch.joined).map(ch => ch.name).join(', ');
+      addLogEntry(`Verification failed. Missing: ${missing}. Double-tap each after joining.`, 'error');
+      showFloatingToast('Please join all 4 channels (double-tap to confirm each)', 'error');
       if (tg) tg.HapticFeedback?.notificationOccurred('error');
-      btn.disabled = false;
-      btn.innerHTML = originalText;
+      verifyBtn.disabled = false;
+      verifyBtn.innerHTML = originalHtml;
     }
   }
   
-  // initial scanning simulation (full stack vibe)
-  async function initialScan() {
-    setProgress(12, 'CONNECTING');
-    scanTitle.innerText = 'Secure Gateway';
-    scanDesc.innerText = 'Initializing secure tunnel...';
-    addLog('Establishing encrypted session with Joy Rummy backend...');
-    await new Promise(r => setTimeout(r, 400));
+  // initial scanning flow
+  async function startInitialScan() {
+    updateProgress(10, 'CONNECTING');
+    scanTitleSpan.innerText = 'Joy Rummy Gateway';
+    scanDescSpan.innerText = 'Initializing secure handshake...';
+    addLogEntry('Starting verification engine v2.0');
+    await new Promise(r => setTimeout(r, 380));
     
     if (!chatId) {
-      addLog('ERROR: No Telegram user context', 'error');
-      showError('Invalid session. Please restart from bot.');
+      addLogEntry('ERROR: Telegram context missing', 'error');
+      showErrorPanel('Please restart from Joy Rummy bot');
       return false;
     }
     
-    setProgress(35, 'AUTHENTICATING');
-    scanTitle.innerText = 'Identity Check';
-    scanDesc.innerText = `Verifying user ${tgUser?.first_name || 'player'}...`;
-    addLog(`User ID: ${chatId} - fetching security profile`, 'success');
+    updateProgress(38, 'AUTHENTICATING');
+    scanTitleSpan.innerText = 'Identity Check';
+    scanDescSpan.innerText = `Verifying user: ${tgUser?.first_name || 'Player'}...`;
+    addLogEntry(`User ID ${chatId} authenticated`, 'success');
+    await new Promise(r => setTimeout(r, 450));
+    
+    updateProgress(64, 'CHANNEL REQUIREMENTS');
+    scanTitleSpan.innerText = 'Channel Sync';
+    scanDescSpan.innerText = 'Fetching mandatory channel list...';
+    addLogEntry('Server requires 4 official channel memberships', 'warning');
     await new Promise(r => setTimeout(r, 500));
     
-    setProgress(68, 'CHANNEL SYNC');
-    scanTitle.innerText = 'Channel Sync';
-    scanDesc.innerText = 'Retrieving required memberships...';
-    addLog('Fetching latest channel whitelist from server...', '');
-    await new Promise(r => setTimeout(r, 500));
-    
-    setProgress(88, 'REQUIRES ACTION');
-    addLog('Manual verification needed: join official channels', 'warning');
+    updateProgress(92, 'ACTION NEEDED');
+    addLogEntry('Please join all channels below (double-tap each after joining)', 'warning');
     await new Promise(r => setTimeout(r, 400));
     
-    setProgress(100, 'READY');
-    scanTitle.innerText = 'Action Required';
-    scanDesc.innerText = 'Please join the channels below to continue';
+    updateProgress(100, 'READY');
+    scanTitleSpan.innerText = 'Verify Membership';
+    scanDescSpan.innerText = 'Join the 4 channels to continue';
     
     // switch to channels UI
     scanDiv.style.display = 'none';
     channelsDiv.style.display = 'block';
-    setBadge('pending', '⚠️ JOIN CHANNELS');
-    renderChannels();
-    addLog('Double-tap each channel after joining to confirm.', 'warning');
+    setGlobalBadge('pending', '⚠️ 4 CHANNELS PENDING');
+    renderFourChannels();
     return true;
   }
   
-  function showError(msg) {
+  function showErrorPanel(msg) {
     scanDiv.style.display = 'none';
     errorDiv.style.display = 'block';
-    document.getElementById('errorMsg').innerText = msg;
-    setBadge('scanning', 'BLOCKED');
+    document.getElementById('errorMsgText').innerText = msg;
+    setGlobalBadge('scan', 'BLOCKED');
   }
   
-  // launch app
-  function launchApp() {
-    if (tg) {
-      tg.close();
-    }
-    // fallback redirect (in production to mini app)
+  function launchMiniApp() {
+    if (tg) tg.close();
     window.location.href = '../miniapp/';
   }
   
-  // setup user profile
+  // set user profile info
   if (tgUser) {
-    const fullName = (tgUser.first_name || '') + (tgUser.last_name ? ' ' + tgUser.last_name : '');
-    userNameSpan.innerText = fullName || 'Joy Player';
-    userIdSpan.innerText = `TG ID: ${tgUser.id}`;
+    const full = (tgUser.first_name || '') + (tgUser.last_name ? ' ' + tgUser.last_name : '');
+    userNameEl.innerText = full.trim() || 'Joy Player';
+    userIdEl.innerText = `TG ID: ${tgUser.id}`;
     if (tgUser.photo_url) {
-      const avatarDiv = document.getElementById('avatarEl');
+      const avatarDiv = document.getElementById('avatarElem');
       avatarDiv.innerHTML = `<img src="${tgUser.photo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:28px;">`;
     }
   } else {
-    userNameSpan.innerText = 'Guest Player';
-    userIdSpan.innerText = 'Demo Mode';
+    userNameEl.innerText = 'Guest Player';
+    userIdEl.innerText = 'Demo Mode';
   }
   
   // wire events
-  verifyBtn.onclick = performVerification;
-  launchBtn.onclick = launchApp;
+  verifyBtn.onclick = runVerification;
+  launchAppBtn.onclick = launchMiniApp;
   
   // start flow
-  initialScan().catch(err => {
-    console.error(err);
-    showError('Security handshake failed. Please retry.');
+  startInitialScan().catch(err => {
+    console.warn(err);
+    showErrorPanel('Verification engine error. Please retry.');
   });
   
-  // feedback haptics for buttons
-  document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (tg) tg.HapticFeedback?.impactOccurred('light');
-    });
+  // haptics for interactivity
+  document.querySelectorAll('.btn-primary-green, .btn-outline-light').forEach(btn => {
+    btn.addEventListener('click', () => tg && tg.HapticFeedback?.impactOccurred('light'));
   });
 })();
 </script>
